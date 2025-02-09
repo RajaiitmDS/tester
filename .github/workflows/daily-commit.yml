@@ -2,7 +2,7 @@ name: Daily Commit Automation
 
 on:
   schedule:
-    - cron: "30 5 * * *"  # Runs every day at 5:30 AM UTC
+    - cron: "30 5 * * *"  # Runs daily at 5:30 AM UTC
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
 
       - name: Setup Git with 22f3001135@ds.study.iitm.ac.in
         run: |
@@ -24,5 +26,5 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git commit -m "Automated daily commit $(date)"
-          git push
+          git commit -m "Automated daily commit $(date)" || echo "No changes to commit"
+          git push origin main  # Change 'main' to your default branch if needed
